@@ -1,10 +1,13 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/datatypes"
+	"gorm.io/gorm"
+)
 
 type Analytics struct {
 	gorm.Model
-	ClickCount      uint   `json:"click_count"`
-	VisitorUsername string `json:"visitor_username"`
-	LinkID          uint   `json:"link_id"`
+	ClickCount        uint           `json:"click_count"`
+	VisitorsUsernames datatypes.JSON `json:"visitors_usernames"`
+	LinkID            uint           `json:"link_id"`
 }

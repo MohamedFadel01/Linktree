@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"linktree-mohamedfadel-backend/internal/models"
 	"log"
 	"os"
 
@@ -28,6 +29,11 @@ func ConnectDatabase() error {
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("failed to connect to database: %v", err)
+	}
+
+	err = DB.AutoMigrate(&models.User{}, &models.Link{}, &models.Analytics{})
+	if err != nil {
+		return fmt.Errorf("failed to run migrations: %v", err)
 	}
 
 	return nil
