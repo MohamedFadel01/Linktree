@@ -67,3 +67,14 @@ func (s *UserService) Login(username, password string) (string, error) {
 
 	return token, nil
 }
+
+func (s *UserService) GetUserProfileInfo(username string) (models.User, error) {
+	var user models.User
+
+	if err := s.db.Preload("Links").Where("username = ?", username).First(&user).Error; err != nil {
+		return user, fmt.Errorf("user not found: %v", err)
+	}
+
+	user.PasswordHash = ""
+	return user, nil
+}
