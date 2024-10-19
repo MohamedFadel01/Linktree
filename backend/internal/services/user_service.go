@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"linktree-mohamedfadel-backend/internal/models"
+	"linktree-mohamedfadel-backend/internal/utils"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -46,4 +47,23 @@ func (s *UserService) SignUp(user models.User, password string) error {
 	user.PasswordHash = hashedPassword
 
 	return s.db.Create(&user).Error
+}
+
+func (s *UserService) Login(username, password string) (string, error) {
+	var user models.User
+
+	if err := s.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return "", fmt.Errorf("invalid username or password")
+	}
+
+	if err := CheckPassword(user.PasswordHash, password); err != nil {
+		return "", fmt.Errorf("invalid username or password")
+	}
+
+	token, err := utils.GenerateJWT(user.Username)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
