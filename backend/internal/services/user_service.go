@@ -104,3 +104,17 @@ func (s *UserService) UpdateUser(username string, updatedUser models.User) error
 
 	return s.db.Save(&user).Error
 }
+
+func (s *UserService) DeleteUser(username string) error {
+	result := s.db.Where("username = ?", username).Delete(&models.User{})
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("user not found")
+	}
+
+	if result.Error != nil {
+		return fmt.Errorf("failed to delete user: %v", result.Error)
+	}
+
+	return nil
+}
