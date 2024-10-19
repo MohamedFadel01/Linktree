@@ -78,3 +78,29 @@ func (s *UserService) GetUserProfileInfo(username string) (models.User, error) {
 	user.PasswordHash = ""
 	return user, nil
 }
+
+func (s *UserService) UpdateUser(username string, updatedUser models.User) error {
+	var user models.User
+
+	if err := s.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return fmt.Errorf("user not found: %v", err)
+	}
+
+	if updatedUser.FullName != "" {
+		user.FullName = updatedUser.FullName
+	}
+
+	if updatedUser.Bio != "" {
+		user.Bio = updatedUser.Bio
+	}
+
+	if updatedUser.PasswordHash != "" {
+		hashedPassword, err := HashPassword(updatedUser.PasswordHash)
+		if err != nil {
+			return err
+		}
+		user.PasswordHash = hashedPassword
+	}
+
+	return s.db.Save(&user).Error
+}
