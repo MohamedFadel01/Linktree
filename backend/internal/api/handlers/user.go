@@ -61,3 +61,15 @@ func (h *UserHandler) LoginHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
+
+func (h *UserHandler) GetUserProfileInfoHandler(c *gin.Context) {
+	username := c.Param("username")
+
+	user, err := h.UserService.GetUserProfileInfo(username)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
