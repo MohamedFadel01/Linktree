@@ -37,7 +37,7 @@ func (s *UserService) SignUp(user models.User, password string) error {
 
 	var existingUser models.User
 	if err := s.db.Where("username = ?", user.Username).First(&existingUser).Error; err == nil {
-		return fmt.Errorf("username already exists: %v", err)
+		return fmt.Errorf("username already exists")
 	}
 
 	hashedPassword, err := HashPassword(password)
