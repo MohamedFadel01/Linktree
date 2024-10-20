@@ -50,6 +50,10 @@ func (s *UserService) SignUp(user models.User, password string) error {
 }
 
 func (s *UserService) Login(username, password string) (string, error) {
+	if username == "" || password == "" {
+		return "", fmt.Errorf("required fields are missing")
+	}
+
 	var user models.User
 
 	if err := s.db.Where("username = ?", username).First(&user).Error; err != nil {

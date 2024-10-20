@@ -41,3 +41,23 @@ func (h *UserHandler) SignUpHandler(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
+
+func (h *UserHandler) LoginHandler(c *gin.Context) {
+	var requestBody struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if err := c.BindJSON(&requestBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	token, err := h.UserService.Login(requestBody.Username, requestBody.Password)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
+}
