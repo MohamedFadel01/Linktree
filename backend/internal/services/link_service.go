@@ -69,3 +69,18 @@ func (s *LinkService) UpdateLink(username string, linkId uint64, updatedLink mod
 
 	return s.db.Save(&link).Error
 }
+
+func (s *LinkService) DeleteLink(username string, linkId uint64) error {
+	var user models.User
+	if err := s.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return fmt.Errorf("user not found: %v", err)
+	}
+
+	result := s.db.Where("id = ? AND user_id = ?", linkId, user.ID).Delete(&models.Link{})
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("link not found")
+	}
+
+	return nil
+}
