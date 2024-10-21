@@ -1,13 +1,16 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/datatypes"
-	"gorm.io/gorm"
 )
 
 type Analytics struct {
-	gorm.Model
+	ID                uint           `gorm:"primarykey"`
 	ClickCount        uint           `json:"click_count"`
 	VisitorsUsernames datatypes.JSON `json:"visitors_usernames"`
 	LinkID            uint           `json:"link_id"`
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
 }
