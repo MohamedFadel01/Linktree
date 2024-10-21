@@ -44,3 +44,28 @@ func (s *LinkService) CreateLink(username string, link models.Link) error {
 
 	return s.db.Create(&newLink).Error
 }
+
+func (s *LinkService) UpdateLink(username string, linkId uint64, updatedLink models.Link) error {
+	var link models.Link
+	var user models.User
+	if err := s.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return fmt.Errorf("user not found: %v", err)
+	}
+
+	if err := s.db.Where("id = ? AND user_id = ?", linkId, user.ID).First(&link).Error; err != nil {
+		return fmt.Errorf("link not found: %v", err)
+	}
+
+	if updatedLink.Title != "" {
+		link.Title = updatedLink.Title
+	}
+
+	if updatedLink.URL != "" {
+		if _, err := url.ParseRequestURI(updatedLink.URL); err != nil {
+			return fmt.Errorf("invalid url")
+		}
+		link.URL = updatedLink.URL
+	}
+
+	return s.db.Save(&link).Error
+}
