@@ -1,7 +1,6 @@
 package services
 
 import (
-	"errors"
 	"fmt"
 	"linktree-mohamedfadel-backend/internal/models"
 	"linktree-mohamedfadel-backend/internal/utils"
@@ -32,7 +31,7 @@ func CheckPassword(hashedPassword, password string) error {
 
 func (s *UserService) SignUp(user models.User, password string) error {
 	if user.FullName == "" || user.Username == "" || password == "" {
-		return errors.New("required fields are missing")
+		return fmt.Errorf("required fields are missing")
 	}
 
 	var existingUser models.User
@@ -75,7 +74,7 @@ func (s *UserService) Login(username, password string) (string, error) {
 func (s *UserService) GetUserProfileInfo(username string) (models.User, error) {
 	var user models.User
 
-	if err := s.db.Preload("Links").Where("username = ?", username).First(&user).Error; err != nil {
+	if err := s.db.Preload("Links").Preload("Links.Analytics").Where("username = ?", username).First(&user).Error; err != nil {
 		return user, fmt.Errorf("user not found: %v", err)
 	}
 
