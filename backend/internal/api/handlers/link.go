@@ -74,3 +74,26 @@ func (h *LinkHandler) UpdateLinkHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Link updated successfully"})
 }
+
+func (h *LinkHandler) DeleteLinkHandler(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	id := c.Param("id")
+	linkId, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = h.LinkService.DeleteLink(username.(string), linkId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Link deleted successfully"})
+}
