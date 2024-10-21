@@ -23,12 +23,6 @@ func (h *LinkHandler) CreateLinkHandler(c *gin.Context) {
 		return
 	}
 
-	user, err := h.LinkService.GetUserByUsername(username.(string))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
-
 	var requestBody struct {
 		Title string `json:"title"`
 		URL   string `json:"url"`
@@ -38,13 +32,12 @@ func (h *LinkHandler) CreateLinkHandler(c *gin.Context) {
 		return
 	}
 
-	link := models.Link{
-		Title:  requestBody.Title,
-		URL:    requestBody.URL,
-		UserId: user.ID,
+	newLink := models.Link{
+		Title: requestBody.Title,
+		URL:   requestBody.URL,
 	}
 
-	if err := h.LinkService.CreateLink(link); err != nil {
+	if err := h.LinkService.CreateLink(username.(string), newLink); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
