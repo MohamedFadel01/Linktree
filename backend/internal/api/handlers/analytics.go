@@ -26,8 +26,7 @@ func (h *AnalyticsHandler) TrackLinkClickHandler(c *gin.Context) {
 
 	visitorUsername, exists := c.Get("username")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
+		visitorUsername = ""
 	}
 
 	if err := h.AnalyticsService.TrackLinkClicks(uint64(linkId), visitorUsername.(string)); err != nil {

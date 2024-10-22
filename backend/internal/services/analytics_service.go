@@ -18,11 +18,6 @@ func NewAnalyticsService(db *gorm.DB) *AnalyticsService {
 }
 
 func (s *AnalyticsService) TrackLinkClicks(linkId uint64, visitorUsername string) error {
-	var user models.User
-	if err := s.db.Where("username = ?", visitorUsername).First(&user).Error; err != nil {
-		return fmt.Errorf("user not found: %v", err)
-	}
-
 	var link models.Link
 	if err := s.db.Where("id = ?", linkId).First(&link).Error; err != nil {
 		return fmt.Errorf("link not found: %v", err)
@@ -39,18 +34,20 @@ func (s *AnalyticsService) TrackLinkClicks(linkId uint64, visitorUsername string
 		analytics.ClickCount++
 	}
 
-	var visitors []string
-	if err := json.Unmarshal(analytics.VisitorsUsernames, &visitors); err != nil {
-		return err
-	}
+	if visitorUsername != "" {
+		var visitors []string
+		if err := json.Unmarshal(analytics.VisitorsUsernames, &visitors); err != nil {
+			return err
+		}
 
-	visitors = append(visitors, visitorUsername)
+		visitors = append(visitors, visitorUsername)
 
-	visitorsJSON, err := json.Marshal(visitors)
-	if err != nil {
-		return err
+		visitorsJSON, err := json.Marshal(visitors)
+		if err != nil {
+			return err
+		}
+		analytics.VisitorsUsernames = visitorsJSON
 	}
-	analytics.VisitorsUsernames = visitorsJSON
 
 	return s.db.Save(&analytics).Error
 }
