@@ -16,6 +16,19 @@ func NewAnalyticsHandler(analyticsService *services.AnalyticsService) *Analytics
 	return &AnalyticsHandler{AnalyticsService: analyticsService}
 }
 
+// TrackLinkClickHandler godoc
+// @Summary Track a link click
+// @Description Records a click event for a specific link. If the request includes authentication, the click will be associated with the authenticated user.
+// @Tags analytics
+// @Accept json
+// @Produce json
+// @Param id path int true "Link ID" example(1)
+// @Security BearerAuth
+// @Success 200 "message: Click tracked successfully"
+// @Failure 400 "error: Invalid link ID"
+// @Failure 404 "error: Link not found"
+// @Failure 500 "error: Internal server error"
+// @Router /analytics/{id}/click [post]
 func (h *AnalyticsHandler) TrackLinkClickHandler(c *gin.Context) {
 	id := c.Param("id")
 	linkId, err := strconv.ParseUint(id, 10, 64)

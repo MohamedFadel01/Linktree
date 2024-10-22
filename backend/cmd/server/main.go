@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"linktree-mohamedfadel-backend/docs"
 	"linktree-mohamedfadel-backend/internal/api"
 	"linktree-mohamedfadel-backend/internal/database"
 	"linktree-mohamedfadel-backend/internal/services"
@@ -9,6 +10,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+// @title           Linktree API
+// @version         1.0
+// @description     A Linktree clone API server.
+
+// @host      localhost:8188
+// @BasePath  /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
 
 func main() {
 	err := database.ConnectDatabase()
@@ -26,8 +39,9 @@ func main() {
 
 	engine := gin.Default()
 
+	docs.SwaggerInfo.BasePath = "/api/v1"
+
 	router.SetupRoutes(engine)
 
 	engine.Run(":8188")
-
 }

@@ -6,6 +6,8 @@ import (
 	"linktree-mohamedfadel-backend/internal/services"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Router struct {
@@ -30,6 +32,8 @@ func (r *Router) SetupRoutes(router *gin.Engine) {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	public := router.Group("/api/v1")
 	{
 		users := public.Group("/users")
@@ -38,7 +42,6 @@ func (r *Router) SetupRoutes(router *gin.Engine) {
 			users.POST("/login", r.userHandler.LoginHandler)
 			users.GET("/:username", r.userHandler.GetUserProfileInfoHandler)
 		}
-
 	}
 
 	protected := router.Group("/api/v1")
@@ -56,7 +59,6 @@ func (r *Router) SetupRoutes(router *gin.Engine) {
 			links.PUT("/:id", r.linkHandler.UpdateLinkHandler)
 			links.DELETE("/:id", r.linkHandler.DeleteLinkHandler)
 		}
-
 	}
 
 	optionalAuth := router.Group("/api/v1")
@@ -67,5 +69,4 @@ func (r *Router) SetupRoutes(router *gin.Engine) {
 			analytics.POST("/:id/click", r.analyticsHandler.TrackLinkClickHandler)
 		}
 	}
-
 }

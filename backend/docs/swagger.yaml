@@ -1,0 +1,388 @@
+basePath: /api/v1
+definitions:
+  handlers.CreateLinkRequest:
+    properties:
+      title:
+        example: My GitHub
+        type: string
+      url:
+        example: https://github.com/johndoe
+        type: string
+    required:
+    - title
+    - url
+    type: object
+  handlers.LoginRequest:
+    properties:
+      password:
+        example: securepassword123
+        type: string
+      username:
+        example: johndoe
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handlers.SignUpRequest:
+    properties:
+      bio:
+        example: Software Developer | Tech Enthusiast
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      password:
+        example: securepassword123
+        type: string
+      username:
+        example: johndoe
+        type: string
+    required:
+    - full_name
+    - password
+    - username
+    type: object
+  models.Analytics:
+    description: Analytics data for tracking link usage
+    properties:
+      click_count:
+        description: ClickCount tracks number of clicks
+        example: 42
+        type: integer
+      created_at:
+        description: CreatedAt timestamp
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      id:
+        description: ID is the unique identifier
+        example: 1
+        type: integer
+      link_id:
+        description: LinkID is the foreign key to the associated link
+        example: 1
+        type: integer
+      updated_at:
+        description: UpdatedAt timestamp
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      visitors_usernames:
+        description: |-
+          VisitorsUsernames stores usernames of visitors
+          swagger:strfmt json
+        example: '["user1", "user2"]'
+        type: string
+    type: object
+  models.Link:
+    description: A link entry with associated analytics
+    properties:
+      analytics:
+        allOf:
+        - $ref: '#/definitions/models.Analytics'
+        description: Analytics data for this link
+      created_at:
+        description: CreatedAt timestamp
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      id:
+        description: ID is the unique identifier
+        example: 1
+        type: integer
+      title:
+        description: Title of the link
+        example: My GitHub Profile
+        type: string
+      updated_at:
+        description: UpdatedAt timestamp
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      url:
+        description: URL of the link
+        example: https://github.com/username
+        type: string
+      user_id:
+        description: UserID is the foreign key to the owner
+        example: 1
+        type: integer
+    type: object
+  models.User:
+    description: A user account with profile information and associated links
+    properties:
+      bio:
+        description: Bio contains user's description
+        example: Software developer passionate about Go
+        type: string
+      created_at:
+        description: CreatedAt timestamp
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      full_name:
+        description: FullName of the user
+        example: John Doe
+        type: string
+      id:
+        description: ID is the unique identifier
+        example: 1
+        type: integer
+      links:
+        description: Links associated with this user
+        items:
+          $ref: '#/definitions/models.Link'
+        type: array
+      updated_at:
+        description: UpdatedAt timestamp
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      username:
+        description: Username is the unique identifier for the user
+        example: johndoe
+        type: string
+    type: object
+host: localhost:8188
+info:
+  contact: {}
+  description: A Linktree clone API server.
+  title: Linktree API
+  version: "1.0"
+paths:
+  /analytics/{id}/click:
+    post:
+      consumes:
+      - application/json
+      description: Records a click event for a specific link. If the request includes
+        authentication, the click will be associated with the authenticated user.
+      parameters:
+      - description: Link ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Click tracked successfully'
+        "400":
+          description: 'error: Invalid link ID'
+        "404":
+          description: 'error: Link not found'
+        "500":
+          description: 'error: Internal server error'
+      security:
+      - BearerAuth: []
+      summary: Track a link click
+      tags:
+      - analytics
+  /links:
+    post:
+      consumes:
+      - application/json
+      description: Create a new link for the authenticated user's profile
+      parameters:
+      - description: Link details
+        in: body
+        name: link
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'message: Link created successfully'
+        "400":
+          description: 'error: Link already exists'
+        "401":
+          description: 'error: Unauthorized'
+      security:
+      - BearerAuth: []
+      summary: Create a new link
+      tags:
+      - links
+  /links/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing link from the authenticated user's profile
+      parameters:
+      - description: Link ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Link deleted successfully'
+        "400":
+          description: 'error: Invalid link ID'
+        "401":
+          description: 'error: Unauthorized'
+        "404":
+          description: 'error: Link not found'
+      security:
+      - BearerAuth: []
+      summary: Delete a link
+      tags:
+      - links
+    put:
+      consumes:
+      - application/json
+      description: Update an existing link for the authenticated user
+      parameters:
+      - description: Link ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated link details
+        in: body
+        name: link
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Link updated successfully'
+        "400":
+          description: 'error: Invalid input'
+        "401":
+          description: 'error: Unauthorized'
+        "404":
+          description: 'error: Link not found'
+      security:
+      - BearerAuth: []
+      summary: Update a link
+      tags:
+      - links
+  /users:
+    delete:
+      consumes:
+      - application/json
+      description: Permanently delete the authenticated user's account and all associated
+        data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: User deleted successfully'
+        "401":
+          description: error:Unauthorized
+        "404":
+          description: error:User not found
+        "500":
+          description: error:Internal server error
+      security:
+      - BearerAuth: []
+      summary: Delete user account
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update the authenticated user's profile information
+      parameters:
+      - description: Updated user information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: User updated successfully'
+        "400":
+          description: 'error: Invalid input'
+        "401":
+          description: 'error: Unauthorized'
+        "404":
+          description: 'error: User not found'
+      security:
+      - BearerAuth: []
+      summary: Update user profile
+      tags:
+      - users
+  /users/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user profile information and their associated links
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile with associated links
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: 'error: User not found'
+      summary: Get user profile
+      tags:
+      - users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user credentials and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'token: JWT_TOKEN_STRING'
+        "400":
+          description: 'error: Invalid input'
+        "401":
+          description: 'error: Invalid username or password'
+      summary: Login user
+      tags:
+      - users
+  /users/signup:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account with the provided information
+      parameters:
+      - description: User registration details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'message: User created successfully'
+        "400":
+          description: 'error: Username already exists'
+      summary: Register a new user
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

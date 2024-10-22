@@ -1,0 +1,570 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A Linktree clone API server.",
+        "title": "Linktree API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8188",
+    "basePath": "/api/v1",
+    "paths": {
+        "/analytics/{id}/click": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Records a click event for a specific link. If the request includes authentication, the click will be associated with the authenticated user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Track a link click",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Link ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message: Click tracked successfully"
+                    },
+                    "400": {
+                        "description": "error: Invalid link ID"
+                    },
+                    "404": {
+                        "description": "error: Link not found"
+                    },
+                    "500": {
+                        "description": "error: Internal server error"
+                    }
+                }
+            }
+        },
+        "/links": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new link for the authenticated user's profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Create a new link",
+                "parameters": [
+                    {
+                        "description": "Link details",
+                        "name": "link",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateLinkRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "message: Link created successfully"
+                    },
+                    "400": {
+                        "description": "error: Link already exists"
+                    },
+                    "401": {
+                        "description": "error: Unauthorized"
+                    }
+                }
+            }
+        },
+        "/links/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing link for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Update a link",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Link ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated link details",
+                        "name": "link",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateLinkRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message: Link updated successfully"
+                    },
+                    "400": {
+                        "description": "error: Invalid input"
+                    },
+                    "401": {
+                        "description": "error: Unauthorized"
+                    },
+                    "404": {
+                        "description": "error: Link not found"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete an existing link from the authenticated user's profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Delete a link",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Link ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message: Link deleted successfully"
+                    },
+                    "400": {
+                        "description": "error: Invalid link ID"
+                    },
+                    "401": {
+                        "description": "error: Unauthorized"
+                    },
+                    "404": {
+                        "description": "error: Link not found"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the authenticated user's profile information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user profile",
+                "parameters": [
+                    {
+                        "description": "Updated user information",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message: User updated successfully"
+                    },
+                    "400": {
+                        "description": "error: Invalid input"
+                    },
+                    "401": {
+                        "description": "error: Unauthorized"
+                    },
+                    "404": {
+                        "description": "error: User not found"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Permanently delete the authenticated user's account and all associated data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete user account",
+                "responses": {
+                    "200": {
+                        "description": "message: User deleted successfully"
+                    },
+                    "401": {
+                        "description": "error:Unauthorized"
+                    },
+                    "404": {
+                        "description": "error:User not found"
+                    },
+                    "500": {
+                        "description": "error:Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "description": "Authenticate user credentials and return JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "Login credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "token: JWT_TOKEN_STRING"
+                    },
+                    "400": {
+                        "description": "error: Invalid input"
+                    },
+                    "401": {
+                        "description": "error: Invalid username or password"
+                    }
+                }
+            }
+        },
+        "/users/signup": {
+            "post": {
+                "description": "Create a new user account with the provided information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "User registration details",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SignUpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "message: User created successfully"
+                    },
+                    "400": {
+                        "description": "error: Username already exists"
+                    }
+                }
+            }
+        },
+        "/users/{username}": {
+            "get": {
+                "description": "Retrieve user profile information and their associated links",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User profile with associated links",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "404": {
+                        "description": "error: User not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.CreateLinkRequest": {
+            "type": "object",
+            "required": [
+                "title",
+                "url"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "example": "My GitHub"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://github.com/johndoe"
+                }
+            }
+        },
+        "handlers.LoginRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "securepassword123"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "johndoe"
+                }
+            }
+        },
+        "handlers.SignUpRequest": {
+            "type": "object",
+            "required": [
+                "full_name",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "bio": {
+                    "type": "string",
+                    "example": "Software Developer | Tech Enthusiast"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "securepassword123"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "johndoe"
+                }
+            }
+        },
+        "models.Analytics": {
+            "description": "Analytics data for tracking link usage",
+            "type": "object",
+            "properties": {
+                "click_count": {
+                    "description": "ClickCount tracks number of clicks",
+                    "type": "integer",
+                    "example": 42
+                },
+                "created_at": {
+                    "description": "CreatedAt timestamp",
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "id": {
+                    "description": "ID is the unique identifier",
+                    "type": "integer",
+                    "example": 1
+                },
+                "link_id": {
+                    "description": "LinkID is the foreign key to the associated link",
+                    "type": "integer",
+                    "example": 1
+                },
+                "updated_at": {
+                    "description": "UpdatedAt timestamp",
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "visitors_usernames": {
+                    "description": "VisitorsUsernames stores usernames of visitors\nswagger:strfmt json",
+                    "type": "string",
+                    "example": "[\"user1\", \"user2\"]"
+                }
+            }
+        },
+        "models.Link": {
+            "description": "A link entry with associated analytics",
+            "type": "object",
+            "properties": {
+                "analytics": {
+                    "description": "Analytics data for this link",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Analytics"
+                        }
+                    ]
+                },
+                "created_at": {
+                    "description": "CreatedAt timestamp",
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "id": {
+                    "description": "ID is the unique identifier",
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "description": "Title of the link",
+                    "type": "string",
+                    "example": "My GitHub Profile"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt timestamp",
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "url": {
+                    "description": "URL of the link",
+                    "type": "string",
+                    "example": "https://github.com/username"
+                },
+                "user_id": {
+                    "description": "UserID is the foreign key to the owner",
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "models.User": {
+            "description": "A user account with profile information and associated links",
+            "type": "object",
+            "properties": {
+                "bio": {
+                    "description": "Bio contains user's description",
+                    "type": "string",
+                    "example": "Software developer passionate about Go"
+                },
+                "created_at": {
+                    "description": "CreatedAt timestamp",
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "full_name": {
+                    "description": "FullName of the user",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "description": "ID is the unique identifier",
+                    "type": "integer",
+                    "example": 1
+                },
+                "links": {
+                    "description": "Links associated with this user",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Link"
+                    }
+                },
+                "updated_at": {
+                    "description": "UpdatedAt timestamp",
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "username": {
+                    "description": "Username is the unique identifier for the user",
+                    "type": "string",
+                    "example": "johndoe"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Type \"Bearer\" followed by a space and JWT token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
