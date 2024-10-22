@@ -39,7 +39,7 @@ func (s *LinkService) CreateLink(username string, link models.Link) error {
 	newLink := models.Link{
 		Title:  link.Title,
 		URL:    link.URL,
-		UserId: user.ID,
+		UserID: user.ID,
 	}
 
 	return s.db.Create(&newLink).Error

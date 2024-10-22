@@ -24,12 +24,14 @@ func (h *AnalyticsHandler) TrackLinkClickHandler(c *gin.Context) {
 		return
 	}
 
-	visitorUsername, exists := c.Get("username")
-	if !exists {
-		visitorUsername = ""
+	var username string
+	if usernameInterface, exists := c.Get("username"); exists {
+		if usernameStr, ok := usernameInterface.(string); ok {
+			username = usernameStr
+		}
 	}
 
-	if err := h.AnalyticsService.TrackLinkClicks(uint64(linkId), visitorUsername.(string)); err != nil {
+	if err := h.AnalyticsService.TrackLinkClicks(uint64(linkId), username); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

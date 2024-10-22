@@ -25,10 +25,16 @@ func (s *AnalyticsService) TrackLinkClicks(linkId uint64, visitorUsername string
 
 	var analytics models.Analytics
 	if err := s.db.Where("link_id = ?", linkId).First(&analytics).Error; err != nil {
+		emptyVisitors := make([]string, 0)
+		visitorsJSON, err := json.Marshal(emptyVisitors)
+		if err != nil {
+			return fmt.Errorf("failed to marshal empty visitors array: %v", err)
+		}
+
 		analytics = models.Analytics{
 			LinkID:            uint(linkId),
 			ClickCount:        1,
-			VisitorsUsernames: datatypes.JSON([]byte("[]")),
+			VisitorsUsernames: datatypes.JSON(visitorsJSON),
 		}
 	} else {
 		analytics.ClickCount++
@@ -37,17 +43,30 @@ func (s *AnalyticsService) TrackLinkClicks(linkId uint64, visitorUsername string
 	if visitorUsername != "" {
 		var visitors []string
 		if err := json.Unmarshal(analytics.VisitorsUsernames, &visitors); err != nil {
-			return err
+			return fmt.Errorf("failed to unmarshal visitors: %v", err)
 		}
 
-		visitors = append(visitors, visitorUsername)
-
-		visitorsJSON, err := json.Marshal(visitors)
-		if err != nil {
-			return err
+		userExists := false
+		for _, visitor := range visitors {
+			if visitor == visitorUsername {
+				userExists = true
+				break
+			}
 		}
-		analytics.VisitorsUsernames = visitorsJSON
+
+		if !userExists {
+			visitors = append(visitors, visitorUsername)
+			visitorsJSON, err := json.Marshal(visitors)
+			if err != nil {
+				return fmt.Errorf("failed to marshal visitors: %v", err)
+			}
+			analytics.VisitorsUsernames = datatypes.JSON(visitorsJSON)
+		}
 	}
 
-	return s.db.Save(&analytics).Error
+	if err := s.db.Save(&analytics).Error; err != nil {
+		return fmt.Errorf("failed to save analytics: %v", err)
+	}
+
+	return nil
 }
