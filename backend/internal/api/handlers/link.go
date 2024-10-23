@@ -97,7 +97,7 @@ func (h *LinkHandler) UpdateLinkHandler(c *gin.Context) {
 
 	err = h.LinkService.UpdateLink(username.(string), linkId, updatedLink)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
