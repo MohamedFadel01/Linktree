@@ -8,6 +8,7 @@ import (
 	"linktree-mohamedfadel-backend/internal/services"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,6 +39,13 @@ func main() {
 	router := api.NewRouter(userService, linkService, analyticsService)
 
 	engine := gin.Default()
+
+	engine.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
