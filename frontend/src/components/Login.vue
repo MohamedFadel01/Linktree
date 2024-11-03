@@ -22,7 +22,7 @@
       <MessageBox v-if="messageBoxVisible" :title="messageTitle" :message="messageText" :type="messageType" />
 
       <p class="text-gray-600 mt-6">
-        Don’t have an account?
+        Don't have an account?
         <router-link to="/signup" class="text-blue-500 hover:underline">Sign Up</router-link>
       </p>
     </div>

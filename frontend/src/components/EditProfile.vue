@@ -3,12 +3,9 @@
     <div class="max-w-3xl mx-auto">
       <template v-if="userStore.userData">
         <EditProfileInfo :fullName="userStore.userData.full_name" :bio="userStore.userData.bio" />
-
         <EditableLinksList :links="userStore.userData.links" @update-links="updateLinks" />
-
         <DeleteAccount />
       </template>
-
       <template v-else>
         <p v-if="userStore.error" class="text-red-500">{{ userStore.error }}</p>
         <p v-else>Loading user data...</p>
@@ -35,10 +32,18 @@ onMounted(async () => {
     router.push('/login')
     return
   }
-  await userStore.fetchUserProfile(authStore.username)
+  try {
+    await userStore.fetchUserProfile(authStore.username)
+  } catch (error) {
+    console.error(error)
+  }
 })
 
-const updateLinks = () => {
-  userStore.fetchUserProfile(authStore.username)
+const updateLinks = async () => {
+  try {
+    await userStore.fetchUserProfile(authStore.username)
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
