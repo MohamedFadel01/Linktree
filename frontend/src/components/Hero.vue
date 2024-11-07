@@ -1,10 +1,10 @@
 <template>
   <section class="bg-gradient-to-r from-teal-100 to-slate-100 min-h-screen flex items-center">
     <div class="container mx-auto px-6 text-center">
-      <h1 class="text-4xl md:text-5xl font-bold text-black mb-4 leading-tight">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4 leading-tight">
         Manage All Your Links in One Place
       </h1>
-      <p class="text-gray-900 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+      <p class="text-gray-800 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
         Linktree allows you to share multiple links with your followers from one single URL.
         It's easy, customizable, and perfect for creators, influencers, and businesses.
       </p>

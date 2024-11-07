@@ -7,7 +7,7 @@
 
     <div class="flex-1 max-w-md mx-4">
       <form @submit.prevent="handleSearch" class="relative">
-        <input v-model="searchUsername" type="text" placeholder="Search username..."
+        <input data-test="search-input" v-model="searchUsername" type="text" placeholder="Search username..."
           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
       </form>
     </div>
@@ -18,7 +18,7 @@
       </router-link>
 
       <div class="relative">
-        <button class="text-1xl font-semibold text-white hover:text-teal-300 flex items-center" @click="toggleDropdown">
+        <button data-test="menu-button" class="text-1xl font-semibold text-white hover:text-teal-300 flex items-center" @click="toggleDropdown">
           Menu
           <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg">

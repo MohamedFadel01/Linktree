@@ -9,8 +9,6 @@
         </router-link>
       </div>
 
-      <p v-if="userStore.error" class="text-red-500">{{ userStore.error }}</p>
-
       <div v-if="!userStore.userData && !userStore.error" class="text-gray-500">
         Loading...
       </div>

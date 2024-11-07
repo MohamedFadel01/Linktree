@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" :class="`fixed top-5 right-5 p-4 rounded shadow-md ${bgColor} ${textColor}`"
+  <div v-if="visible" :class="`fixed top-15 right-5 p-4 rounded shadow-md ${bgColor} ${textColor}`"
     @click="visible = false">
     <span class="font-semibold">{{ title }}</span>
     <p>{{ message }}</p>

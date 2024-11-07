@@ -1,25 +1,20 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('login', (username, password) => {
+  cy.visit('/login')
+  cy.get('[data-test="login-username-input"]').type(username)
+  cy.get('[data-test="password-input"]').type(password)
+  cy.get('[data-test="login-button"]').click()
+})
+
+Cypress.Commands.add('signup', (fullname, password) => {
+  const username = `testuser_${Math.floor(Math.random() * 100000)}`
+
+  cy.visit('/signup')
+  cy.get('[data-test="username-input"]').type(username)
+  cy.get('[data-test="fullname-input"]').type(fullname)
+  cy.get('[data-test="password-input"]').type(password)
+  cy.get('[data-test="signup-button"]').click()
+
+  cy.window().then(window => {
+    window.localStorage.setItem('signupUsername', username)
+  })
+})

@@ -4,16 +4,16 @@
       <h2 class="text-3xl font-bold text-gray-800 mb-8">Login</h2>
       <form @submit.prevent="submitForm" class="space-y-4">
         <div>
-          <label class="block text-gray-600 text-left">Username</label>
-          <input type="text" v-model="username"
+          <label for="username" class="block text-gray-600 text-left">Username</label>
+          <input data-test="login-username-input" type="text" id="username" v-model="username"
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
         </div>
         <div>
-          <label class="block text-gray-600 text-left">Password</label>
-          <input type="password" v-model="password"
+          <label for="password" class="block text-gray-600 text-left">Password</label>
+          <input data-test="password-input" type="password" id="password" v-model="password"
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
         </div>
-        <button type="submit"
+        <button data-test="login-button" type="submit"
           class="w-full bg-primary text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
           Login
         </button>
