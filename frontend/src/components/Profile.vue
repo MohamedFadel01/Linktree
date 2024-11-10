@@ -16,7 +16,8 @@
       <ProfileInfo v-if="userStore.userData" :fullName="userStore.userData.full_name"
         :username="userStore.userData.username" :bio="userStore.userData.bio" />
 
-      <LinksList v-if="userStore.userData && userStore.userData.links" :links="userStore.userData.links" />
+      <LinksList v-if="userStore.userData && userStore.userData.links" :links="userStore.userData.links"
+        :isOwner="isOwner" />
     </div>
   </section>
 </template>

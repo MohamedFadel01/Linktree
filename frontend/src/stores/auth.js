@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { API_BASE_URL } from '../config.js'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -15,13 +16,10 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(username, password) {
       try {
-        const response = await axios.post(
-          'http://localhost:8188/api/v1/users/login',
-          {
-            username,
-            password,
-          },
-        )
+        const response = await axios.post(`${API_BASE_URL}/v1/users/login`, {
+          username,
+          password,
+        })
         this.token = response.data.token
         this.username = username
         localStorage.setItem('token', this.token)
@@ -35,7 +33,7 @@ export const useAuthStore = defineStore('auth', {
 
     async signup(userData) {
       try {
-        await axios.post('http://localhost:8188/api/v1/users/signup', userData)
+        await axios.post(`${API_BASE_URL}/v1/users/signup`, userData)
         return true
       } catch (error) {
         throw new Error(error.response?.data?.error || 'Signup failed')

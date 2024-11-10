@@ -1,0 +1,32 @@
+frontend:
+  image:
+    repository: mohamedfadel01/frontend
+    tag: latest
+  replicas: 1
+  service:
+    type: LoadBalancer
+    port: 3000
+    nodePort: 30003
+
+backend:
+  image:
+    repository: mohamedfadel01/backend
+    tag: latest
+  replicas: 1
+  service:
+    type: LoadBalancer
+    port: 8188
+    nodePort: 30004
+
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+  persistence:
+    size: 1Gi
+  service:
+    port: 5432
+  auth:
+    username: postgres
+    password: postgres
+    database: linktree

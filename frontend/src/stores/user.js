@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from './auth.js'
+import { API_BASE_URL } from '../config.js'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -11,9 +12,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetchUserProfile(username) {
       try {
-        const response = await axios.get(
-          `http://localhost:8188/api/v1/users/${username}`,
-        )
+        const response = await axios.get(`${API_BASE_URL}/v1/users/${username}`)
         this.userData = response.data
         return response.data
       } catch (error) {
@@ -25,8 +24,7 @@ export const useUserStore = defineStore('user', {
 
     async updateProfile(userData) {
       try {
-        await axios.put('http://localhost:8188/api/v1/users', userData)
-
+        await axios.put(`${API_BASE_URL}/v1/users`, userData)
         const authStore = useAuthStore()
         await this.fetchUserProfile(authStore.username)
       } catch (error) {
@@ -38,7 +36,7 @@ export const useUserStore = defineStore('user', {
 
     async deleteAccount() {
       try {
-        await axios.delete('http://localhost:8188/api/v1/users')
+        await axios.delete(`${API_BASE_URL}/v1/users`)
         const authStore = useAuthStore()
         authStore.logout()
       } catch (error) {

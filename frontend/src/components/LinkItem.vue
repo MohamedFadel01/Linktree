@@ -5,7 +5,7 @@
     </h3>
     <p class="text-gray-500 text-sm">{{ link.url }}</p>
 
-    <LinkAnalytics :analytics="link.analytics" class="mt-4" />
+    <LinkAnalytics v-if="isOwner" :analytics="link.analytics" class="mt-4" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@
 import { useLinkStore } from '@/stores/link'
 import LinkAnalytics from './LinkAnalytics.vue'
 
-const props = defineProps(['link'])
+const props = defineProps(['link', 'isOwner'])
 const linkStore = useLinkStore()
 
 const handleClick = async () => {

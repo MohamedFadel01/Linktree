@@ -18,7 +18,8 @@
       </router-link>
 
       <div class="relative">
-        <button data-test="menu-button" class="text-1xl font-semibold text-white hover:text-teal-300 flex items-center" @click="toggleDropdown">
+        <button data-test="menu-button" class="text-1xl font-semibold text-white hover:text-teal-300 flex items-center"
+          @click="toggleDropdown">
           Menu
           <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg">
@@ -52,6 +53,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import MessageBox from '@/components/MessageBox.vue'
+import { API_BASE_URL } from '../config.js';
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -65,7 +67,7 @@ const messageType = ref('info')
 const handleSearch = async () => {
   if (searchUsername.value) {
     try {
-      const response = await fetch(`http://localhost:8188/api/v1/users/${searchUsername.value}`);
+      const response = await fetch(`${API_BASE_URL}/v1/users/${searchUsername.value}`);
 
       if (response.ok) {
         router.push(`/${searchUsername.value}`);

@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-4">
-    <LinkItem v-for="link in links" :key="link.id" :link="link" />
+    <LinkItem v-for="link in links" :key="link.id" :link="link" :isOwner="isOwner" />
   </div>
 </template>
 
@@ -9,6 +9,7 @@ import { defineProps } from 'vue'
 import LinkItem from './LinkItem.vue'
 
 const props = defineProps({
-  links: Array
+  links: Array,
+  isOwner: Boolean,
 })
 </script>
